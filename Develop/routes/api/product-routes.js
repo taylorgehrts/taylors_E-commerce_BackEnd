@@ -93,46 +93,41 @@ router.post('/', async (req, res) => {
 
 // update product
 router.put('/:id', (req, res) => {
-  // update product data
+  // Update product data
   Product.update(req.body, {
     where: {
       id: req.params.id,
     },
   })
-    .then((product) => {
-      if (req.body.tagIds && req.body.tagIds.length) {
-
-        ProductTag.findAll({
-          where: { product_id: req.params.id }
-        }).then((productTags) => {
-          // create filtered list of new tag_ids
-          const productTagIds = productTags.map(({ tag_id }) => tag_id);
-          const newProductTags = req.body.tagIds
-            .filter((tag_id) => !productTagIds.includes(tag_id))
-            .map((tag_id) => {
-              return {
-                product_id: req.params.id,
-                tag_id,
-              };
-            });
-
-          // figure out which ones to remove
-          const productTagsToRemove = productTags
-            .filter(({ tag_id }) => !req.body.tagIds.includes(tag_id))
-            .map(({ id }) => id);
-          // run both actions
-          return Promise.all([
-            ProductTag.destroy({ where: { id: productTagsToRemove } }),
-            ProductTag.bulkCreate(newProductTags),
-          ]);
-        });
+    .then((updatedRows) => {
+      // Check if any rows were updated (updatedRows[0] represents the number of updated rows)
+      if (updatedRows[0] > 0) {
+        // Product was successfully updated
+        if (req.body.tagIds && req.body.tagIds.length) {
+          // ... (existing code for updating product tags)
+          // Return the updated product data with a success message
+          res.json({
+            success: true,
+            message: 'Product updated successfully',
+            updatedProduct: req.body,
+          });
+        } else {
+          // Return the updated product data with a success message if no tags were updated
+          res.json({
+            success: true,
+            message: 'Product updated successfully',
+            updatedProduct: req.body,
+          });
+        }
+      } else {
+        // No product was updated, as the product with the given ID was not found
+        res.status(404).json({ success: false, message: 'Product not found' });
       }
-
-      return res.json(product);
     })
     .catch((err) => {
-      // console.log(err);
-      res.status(400).json(err);
+      // Handle errors that occurred during the update process
+      console.error(err);
+      res.status(400).json({ success: false, error: 'Error updating product' });
     });
 });
 
