@@ -24,7 +24,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-
 // get one product
 router.get('/:id', async (req, res) => {
   try {
@@ -53,7 +52,6 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// create new product
 // create new product
 router.post('/', async (req, res) => {
   try {
@@ -87,9 +85,6 @@ router.post('/', async (req, res) => {
     res.status(500).json({ message: 'Failed to create the product' });
   }
 });
-
-
-
 
 // update product
 router.put('/:id', (req, res) => {
@@ -130,7 +125,7 @@ router.put('/:id', (req, res) => {
       res.status(400).json({ success: false, error: 'Error updating product' });
     });
 });
-
+// delete product
 router.delete('/:id', async (req, res) => {
   try {
     const productId = req.params.id;
