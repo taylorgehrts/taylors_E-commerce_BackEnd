@@ -4,7 +4,7 @@
 - [Description](#description)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Walkthrough](#Walkthrough)
+- [Walkthrough](#walkthrough)
 - [License](#license)
 - [Contributing](#contributing)
 - [Tests](#tests)
